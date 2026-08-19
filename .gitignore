@@ -1,0 +1,47 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# ── Virtual environments ──────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# uv writes uv.lock, which *is* committed — it pins the exact dependency
+# versions every developer and CI run resolves to.
+
+# ── Test / tooling artefacts ──────────────────────────────────────────────────
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+artifacts/
+test-results/
+playwright-report/
+*.webm
+*.zip.trace
+
+# ── Environment / secrets ─────────────────────────────────────────────────────
+# .env holds per-developer settings and credentials; .env.example is committed.
+.env
+.env.*
+!.env.example
+
+# ── Editors / OS ──────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# ── Claude Code ───────────────────────────────────────────────────────────────
+.claude/settings.local.json

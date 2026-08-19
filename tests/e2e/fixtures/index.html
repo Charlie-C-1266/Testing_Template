@@ -1,0 +1,33 @@
+<!doctype html>
+<!--
+  Stand-in for the application under test, so the example Playwright test runs
+  with no server and no network. Delete it (and example_page.py /
+  test_example.py) once you point the harness at something real.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Test Harness Demo</title>
+  </head>
+  <body>
+    <h1>Test Harness Demo</h1>
+
+    <form id="greet-form">
+      <label for="name">Your name</label>
+      <input id="name" name="name" type="text" required />
+      <button type="submit">Greet me</button>
+    </form>
+
+    <p data-testid="greeting" hidden></p>
+
+    <script>
+      document.getElementById("greet-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.getElementById("name").value.trim();
+        const greeting = document.querySelector('[data-testid="greeting"]');
+        greeting.textContent = `Hello, ${name}!`;
+        greeting.hidden = false;
+      });
+    </script>
+  </body>
+</html>
