@@ -1,6 +1,6 @@
 # Base image: Microsoft's Python dev container (Debian trixie) — it ships git,
 # a non-root `vscode` user with passwordless sudo, and the usual build tooling.
-FROM mcr.microsoft.com/devcontainers/python:3-3.14-trixie
+FROM mcr.microsoft.com/devcontainers/python:3.15-trixie
 
 # uv is copied straight from the official distroless image: no `curl | sh`, no
 # pip bootstrap, and the version is pinned by tag so rebuilds are reproducible.
