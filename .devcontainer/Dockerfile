@@ -1,11 +1,11 @@
-# Base image: Microsoft's Python dev container (Debian bookworm) — it ships git,
+# Base image: Microsoft's Python dev container (Debian trixie) — it ships git,
 # a non-root `vscode` user with passwordless sudo, and the usual build tooling.
-FROM mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
+FROM mcr.microsoft.com/devcontainers/python:3-3.14-trixie
 
 # uv is copied straight from the official distroless image: no `curl | sh`, no
 # pip bootstrap, and the version is pinned by tag so rebuilds are reproducible.
 # Bump this tag to upgrade uv.
-COPY --from=ghcr.io/astral-sh/uv:0.8.17 /uv /uvx /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.13.10 /uv /uvx /usr/local/bin/
 
 # Install the OS packages Chromium needs (fonts, X/GTK libs, codecs) at *build*
 # time, as root — `playwright install-deps` is an apt-get wrapper, so running it

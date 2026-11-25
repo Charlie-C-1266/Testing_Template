@@ -11,3 +11,4 @@ echo "==> Installing Playwright's Chromium build"
 uv run playwright install chromium
 
 echo "==> Ready. Try: make test"
+echo "    Need pandas, pydantic, httpx, …? Run: make packages"

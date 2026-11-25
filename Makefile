@@ -2,7 +2,7 @@
 # you can also run by hand.
 .DEFAULT_GOAL := help
 
-.PHONY: help setup lint format typecheck test test-unit test-e2e test-headed trace clean
+.PHONY: help setup packages hooks check lint format typecheck test test-unit test-e2e test-headed trace clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -10,6 +10,14 @@ help:  ## Show this help
 setup:  ## Install dependencies and the Chromium build Playwright needs
 	uv sync
 	uv run playwright install chromium
+
+packages:  ## Pick optional packages (pandas, pydantic, httpx, …) to add
+	uv run python scripts/add_packages.py
+
+hooks:  ## Install the optional pre-commit hooks
+	uvx pre-commit install
+
+check: lint typecheck test  ## Everything CI runs: lint, types, tests
 
 lint:  ## Lint and check formatting
 	uv run ruff check .
