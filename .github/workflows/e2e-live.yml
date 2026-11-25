@@ -1,0 +1,71 @@
+# Run the browser suite against a deployed application, across browsers.
+#
+# Set the target once as a repository variable (Settings → Secrets and
+# variables → Actions → Variables → BASE_URL), or pass one when starting the
+# workflow by hand. Put credentials in repository *secrets* and map them into
+# `env:` below; never hard-code them in tests.
+name: E2E (live target)
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "URL of the application under test (defaults to the BASE_URL variable)"
+        required: false
+  schedule:
+    - cron: "0 5 * * 1-5" # 05:00 UTC, weekdays
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    name: ${{ matrix.browser }}
+    # Skipped (not failed) until a target is configured, so a fresh copy of the
+    # template doesn't go red every night.
+    if: inputs.base_url || vars.BASE_URL
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    env:
+      BASE_URL: ${{ inputs.base_url || vars.BASE_URL }}
+      # EXAMPLE_PASSWORD: ${{ secrets.EXAMPLE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.4.0
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Install ${{ matrix.browser }}
+        run: uv run playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Test
+        run: >
+          uv run pytest -m e2e
+          --browser ${{ matrix.browser }}
+          --tracing retain-on-failure
+          --screenshot only-on-failure
+          --output test-results
+          --junitxml=junit.xml
+
+      - name: Upload traces and screenshots
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-${{ matrix.browser }}
+          path: |
+            junit.xml
+            test-results/
+          if-no-files-found: ignore

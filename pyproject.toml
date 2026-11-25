@@ -7,17 +7,20 @@ requires-python = ">=3.12"
 dependencies = [
     # Runtime dependencies of the harness itself (helpers under src/harness),
     # *not* the test tooling — that lives in the dev dependency group below.
-    "python-dotenv>=1.0",
+    "python-dotenv>=1.2",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3",
-    "pytest-playwright>=0.5",
-    "pytest-cov>=5.0",
-    "pytest-xdist>=3.6",
-    "ruff>=0.6",
-    "mypy>=1.11",
+    "pytest>=9.2",
+    # The `base-url` extra provides the `--base-url` option tests/e2e/conftest.py
+    # reads; pytest-playwright stopped bundling it in 0.10.
+    "pytest-playwright[base-url]>=0.10",
+    "pytest-cov>=7.0",
+    "pytest-timeout>=2.4",
+    "pytest-xdist>=3.8",
+    "ruff>=0.17",
+    "mypy>=2.4",
 ]
 
 [build-system]
@@ -35,6 +38,8 @@ addopts = [
     "--strict-markers",
     "--import-mode=importlib",
 ]
+# Fail a hung test instead of letting CI sit until the job timeout.
+timeout = 300
 markers = [
     "e2e: browser test driven by Playwright (needs `uv run playwright install`)",
     "slow: test that takes more than a few seconds",

@@ -1,0 +1,14 @@
+{
+  // Suggested when the repo is opened outside the dev container; the container
+  // installs the same set automatically (see .devcontainer/devcontainer.json).
+  "recommendations": [
+    "ms-vscode-remote.remote-containers",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.mypy-type-checker",
+    "charliermarsh.ruff",
+    "ms-playwright.playwright",
+    "tamasfe.even-better-toml",
+    "editorconfig.editorconfig"
+  ]
+}
