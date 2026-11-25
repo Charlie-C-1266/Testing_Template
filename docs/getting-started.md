@@ -40,7 +40,11 @@ You should see the demo tests pass and `test_app_under_test.py` skipped.
 2. Replace the README's title and intro with what this harness covers.
 3. Optionally rename `src/harness/` (update `[tool.hatch.build.targets.wheel]`
    and the imports to match).
-4. Optionally run `make hooks` to lint and format on every commit.
+4. Run `make packages` to add the libraries you plan to use — pandas,
+   pydantic, httpx, pytest-asyncio and so on. It adds them with uv (typing
+   stubs included) so they're in the container and the lockfile. You can come
+   back to it any time.
+5. Optionally run `make hooks` to lint and format on every commit.
 
 ## 4. Point it at your application
 

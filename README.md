@@ -24,6 +24,8 @@ in [docs/ci.md](docs/ci.md).
   check. Dependabot keeps Python packages, actions, and the image current.
 - **Agent-ready** — [`AGENTS.md`](AGENTS.md) gives AI coding agents the commands
   and conventions; `CLAUDE.md` imports it for Claude Code.
+- **Package picker** — `make packages` offers common extras (pandas, pydantic,
+  httpx, pytest-asyncio, Faker, …) and adds them with uv, typing stubs included.
 - **Optional pre-commit hooks** — ruff and a lockfile check, via `make hooks`.
 
 ## Quick start
@@ -75,6 +77,7 @@ On a bare Linux machine you may also need Chromium's system libraries:
 │       └── devcontainer.yml  # builds the dev container and runs `make check` in it
 ├── .vscode/extensions.json # recommended extensions outside the container
 ├── docs/                   # getting-started walkthrough and CI guide
+├── scripts/add_packages.py # `make packages`: pick optional dependencies
 ├── src/harness/            # reusable helpers, importable as `harness.*`
 │   ├── __init__.py
 │   └── config.py           # settings from environment variables + .env
@@ -91,6 +94,7 @@ On a bare Linux machine you may also need Chromium's system libraries:
 ├── .pre-commit-config.yaml # optional hooks (`make hooks`)
 ├── AGENTS.md               # instructions for AI coding agents
 ├── CLAUDE.md               # imports AGENTS.md for Claude Code
+├── LICENSE                 # MIT
 ├── Makefile                # shortcuts for everything below
 ├── pyproject.toml          # dependencies + pytest/ruff/mypy/coverage config
 └── uv.lock                 # exact resolved versions — commit this
@@ -195,6 +199,32 @@ test, and add new ones to `Settings`, `.env.example`, and this table together.
 
 ## Managing dependencies
 
+### Optional packages
+
+Playwright, pytest, ruff, and mypy are always installed. For the rest, pick from
+a short catalog of common choices:
+
+```bash
+make packages                                              # interactive menu
+uv run python scripts/add_packages.py --list               # just show the catalog
+uv run python scripts/add_packages.py --packages pandas,httpx --yes   # no prompt
+```
+
+The catalog covers data (pandas, polars, numpy, openpyxl, PyYAML), models and
+validation (pydantic, pydantic-settings, jsonschema), HTTP (httpx, requests,
+respx), async tests (pytest-asyncio — `asyncio` itself is built in), test data
+(Faker, Hypothesis), test tooling (pytest-mock, pytest-rerunfailures, syrupy,
+pytest-html, allure-pytest), and databases (SQLAlchemy, psycopg).
+
+Each pick goes through `uv add`: test-only tooling lands in the `dev` group,
+anything your harness code imports lands in the main dependencies, and typing
+stubs (`pandas-stubs`, `types-requests`, …) come along so strict mypy keeps
+passing. Packages already in `pyproject.toml` are skipped. Commit the updated
+`pyproject.toml` and `uv.lock`. Edit `CATALOG` in `scripts/add_packages.py` to
+offer your team's own defaults.
+
+### By hand
+
 ```bash
 uv add requests                 # runtime dependency of the harness
 uv add --dev pytest-timeout     # test-only tooling
@@ -243,5 +273,6 @@ detail.
 4. Build your first real test from `tests/e2e/test_app_under_test.py`.
 5. Replace this README's title and intro with what your harness actually covers,
    and update `AGENTS.md` with any conventions of your own.
-6. Set the `BASE_URL` repository variable to enable the scheduled live-target
+6. Put your own name in `LICENSE`, or swap the license for your organisation's.
+7. Set the `BASE_URL` repository variable to enable the scheduled live-target
    run (see [docs/ci.md](docs/ci.md)).

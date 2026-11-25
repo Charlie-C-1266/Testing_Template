@@ -3,6 +3,8 @@ name = "testing-template"
 version = "0.1.0"
 description = "Generic Python test-harness template (uv + dev container + Playwright)"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
     # Runtime dependencies of the harness itself (helpers under src/harness),
@@ -59,7 +61,7 @@ extend-select = [
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["src", "tests"]
+files = ["src", "tests", "scripts"]
 
 [tool.coverage.run]
 source = ["src"]

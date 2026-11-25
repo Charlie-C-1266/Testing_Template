@@ -24,6 +24,7 @@ never create a virtualenv by hand.
 | Browser tests only | `make test-e2e` |
 | One test | `uv run pytest tests/path/test_file.py::test_name` |
 | Add a dependency | `uv add <pkg>` (runtime) or `uv add --dev <pkg>` (tooling) |
+| Add from the curated catalog | `uv run python scripts/add_packages.py --packages pandas,httpx --yes` (`--list` shows it; it adds typing stubs too) |
 
 **Definition of done:** `make check` passes. Do not report a change as finished
 without running it.
